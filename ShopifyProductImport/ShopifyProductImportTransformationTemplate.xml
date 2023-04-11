@@ -2595,11 +2595,19 @@
             <name>Shopify Product Import Transformation</name>
             <variables>
                 <entry>
+                    <key>baseUrl</key>
+                    <value></value>
+                </entry>
+                <entry>
+                    <key>vendor</key>
+                    <value></value>
+                </entry>
+                <entry>
                     <key>variantWeightUnit</key>
                     <value>lb</value>
                 </entry>
             </variables>
         </processGroups>
     </snippet>
-    <timestamp>04/11/2023 11:14:56 IST</timestamp>
+    <timestamp>04/11/2023 11:34:03 IST</timestamp>
 </template>
