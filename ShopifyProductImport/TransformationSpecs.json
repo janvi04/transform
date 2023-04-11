@@ -1,0 +1,178 @@
+[
+  {
+    "operation": "shift",
+    "spec": {
+      "*": {
+        "product_type": {
+          "simple": null,
+          "*": {
+            "@2": "[]"
+          }
+        }
+      }
+    }
+  },
+  {
+    "operation": "modify-overwrite-beta",
+    "spec": {
+      "*": {
+        "CvSplitted": "=split('\\|', @(1,configurable_variations))",
+        "CvSplitted2": "=split(',', @(1,CvSplitted))"
+      }
+    }
+  },
+  {
+    "operation": "shift",
+    "spec": {
+      "*": {
+        "CvSplitted2": {
+          "*": {
+            "0": "[&3].ProductMap&3&1.SKU2",
+            "1": "[&3].ProductMap&3&1.Size",
+            "2": "[&3].ProductMap&3&1.Color"
+          }
+        },
+        "@": "[&]"
+      }
+    }
+  },
+  {
+    "operation": "shift",
+    "spec": {
+      "*": {
+        "name": "[&1].name",
+        "sku": "[&1].parentSku",
+        "description": "[&1].description",
+        "attribute_set_code": "[&1].attribute_set_code",
+        "weight": "[&1].weight",
+        "price": "[&1].price",
+        "base_image": "[&1].imgSrc",
+        "ProductMap*": "[&1].ProductList"
+      }
+    }
+  },
+  {
+    "operation": "modify-overwrite-beta",
+    "spec": {
+      "*": {
+        "baseUrl": "${baseUrl}",
+        "ProductList": {
+          "*": {
+            "skuSplitted": "=split('=',@(1,SKU2))",
+            "variantSku": "=lastElement(@(1,skuSplitted))",
+            "sizeSplitted": "=split('=',@(1,Size))",
+            "variantSize": "=lastElement(@(1,sizeSplitted))",
+            "colorSplitted": "=split('=',@(1,Color))",
+            "variantColor": "=lastElement(@(1,colorSplitted))",
+            "variantBarCodeSplittedHyphen": "=split('-', @(1,variantSku))",
+            "variantBarCodeJoined": "=join('',@(1,variantBarCodeSplittedHyphen))",
+            "variantBarCodeJoinedCopy": "@(1,variantBarCodeJoined)",
+            "skuImageSplit": "=split('',@(3,parentSku))",
+            "skuConcated": "=concat('/',@(1,skuImageSplit[0]),'/',@(1,skuImageSplit[1]),'/',@(3,parentSku),'-',@(1,variantColor),'_main.jpg')",
+            "variantImage": "=toLower(@(1,skuConcated))",
+            "variantImageFinal": "=concat(@(3,baseUrl),@(1,variantImage))"
+          }
+        },
+        "nameEscapedBrackets": "=split('&|;| |\\(|\\)', @(1,name))",
+        "nameEscapedJoined": "=join(' ',@(1,nameEscapedBrackets))",
+        "nameSplitted": "=split(' ', @(1,nameEscapedJoined))",
+        "nameEscaped": "=split('&|;', @(1,name))",
+        "nameJoinedTitle": "=join(' ',@(1,nameEscaped))",
+        "name_toLower": "=toLower(@(1,nameSplitted))",
+        "nameJoinedHandle": "=join('-',@(1,name_toLower))",
+        "productCategory": "Apparel & Accessories > Clothing",
+        "published": "TRUE",
+        "defaultTitle": "",
+        "defaultBody": "",
+        "Vendor": "${vendor}",
+        "defaultVendor": "",
+        "defaultProductCategory": "",
+        "variantShipping": "TRUE",
+        "variantTaxable": "TRUE",
+        "defaultImageSrc": "",
+        "baseImageFinal": "=concat(@(1,baseUrl),@(1,imgSrc))",
+        "variantWeightUnit": "${variantWeightUnit}",
+        "defaultSize": "",
+        "defaultColor": "",
+        "defaultTag": "",
+        "tagWithMen": "=concat(@(1,attribute_set_code),',',Men)",
+        "tagWithWomen": "=concat(@(1,attribute_set_code),',',Women)",
+        "descriptionSplitted": "=split('\n', @(1,description))",
+        "descriptionJoined": "=join(' ',@(1,descriptionSplitted))"
+      }
+    }
+  },
+  {
+    "operation": "shift",
+    "spec": {
+      "*": {
+        "ProductList": {
+          "0": {
+            "@(2,nameJoinedHandle)": "[#4].ProductMap&3&1.Handle",
+            "@(2,nameJoinedTitle)": "[#4].ProductMap&3&1.Title",
+            "@(2,descriptionJoined)": "[#4].ProductMap&3&1.Body (HTML)",
+            "@(2,Vendor)": "[#4].ProductMap&3&1.Vendor",
+            "@(2,productCategory)": "[#4].ProductMap&3&1.Product Category",
+            "@variantBarCodeJoinedCopy": {
+              "M*": {
+                "@(4,tagWithMen)": "[#6].ProductMap&5&3.Tags"
+              },
+              "W*": {
+                "@(4,tagWithWomen)": "[#6].ProductMap&5&3.Tags"
+              },
+              "*": {
+                "@(4,attribute_set_code)": "[#6].ProductMap&5&3.Tags"
+              }
+            },
+            "@(2,published)": "[#4].ProductMap&3&1.Published",
+            "@variantBarCodeJoined": "[#4].ProductMap&3&1.Variant Barcode",
+            "#Size": "[#4].ProductMap&3&1.Option1 Name",
+            "@variantSize": "[#4].ProductMap&3&1.Option1 Value",
+            "#Color": "[#4].ProductMap&3&1.Option2 Name",
+            "@variantColor": "[#4].ProductMap&3&1.Option2 Value",
+            "#1": "[#4].ProductMap&3&1.Variant Grams",
+            "#manual": "[#4].ProductMap&3&1.Variant Fulfillment Service",
+            "@(2,price)": "[#4].ProductMap&3&1.Variant Price",
+            "@(2,variantShipping)": "[#4].ProductMap&3&1.Variant Requires Shipping",
+            "@(2,variantTaxable)": "[#4].ProductMap&3&1.Variant Taxable",
+            "@(2,baseImageFinal)": "[#4].ProductMap&3&1.Image Src",
+            "@variantImageFinal": "[#4].ProductMap&3&1.Variant Image",
+            "@variantSku": "[#4].ProductMap&3&1.Variant SKU",
+            "@(2,variantWeightUnit)": "[#4].ProductMap&3&1.Variant Weight Unit"
+          },
+          "*": {
+            "@(2,nameJoinedHandle)": "[#4].ProductMap&3&1.Handle",
+            "@(2,defaultTitle)": "[#4].ProductMap&3&1.Title",
+            "@(2,defaultBody)": "[#4].ProductMap&3&1.Body (HTML)",
+            "@(2,defaultVendor)": "[#4].ProductMap&3&1.Vendor",
+            "@(2,defaultProductCategory)": "[#4].ProductMap&3&1.Product Category",
+            "@(2,defaultTag)": "[#4].ProductMap&3&1.Tags",
+            "@(2,published)": "[#4].ProductMap&3&1.Published",
+            "@variantBarCodeJoined": "[#4].ProductMap&3&1.Variant Barcode",
+            "@(2,defaultSize)": "[#4].ProductMap&3&1.Option1 Name",
+            "@variantSize": "[#4].ProductMap&3&1.Option1 Value",
+            "@(2,defaultColor)": "[#4].ProductMap&3&1.Option2 Name",
+            "@variantColor": "[#4].ProductMap&3&1.Option2 Value",
+            "#1": "[#4].ProductMap&3&1.Variant Grams",
+            "#manual": "[#4].ProductMap&3&1.Variant Fulfillment Service",
+            "@(2,price)": "[#4].ProductMap&3&1.Variant Price",
+            "@(2,variantShipping)": "[#4].ProductMap&3&1.Variant Requires Shipping",
+            "@(2,variantTaxable)": "[#4].ProductMap&3&1.Variant Taxable",
+            "@(2,defaultImageSrc)": "[#4].ProductMap&3&1.Image Src",
+            "@variantImageFinal": "[#4].ProductMap&3&1.Variant Image",
+            "@variantSku": "[#4].ProductMap&3&1.Variant SKU",
+            "@(2,variantWeightUnit)": "[#4].ProductMap&3&1.Variant Weight Unit"
+          }
+        }
+      }
+    }
+  },
+  {
+    "operation": "shift",
+    "spec": {
+      "*": {
+        "ProductMap*": "[]"
+      }
+    }
+  }
+]
